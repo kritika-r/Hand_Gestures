@@ -1,6 +1,6 @@
 
 var prediction1="";
-var prediction2="";
+
 Webcam.set({
   height:300,
   width:350,
@@ -24,7 +24,31 @@ function modelLoaded(){
 function speak(){
   var synth= window.speechSynthesis;
   var speak_data_1= "The first prediction is" + prediction_1;
-  var speak_data_2= "The second prediction is" + prediction_2;
-  var utterThis= new speechSynthesisUtterance(speak_data_1 + speak_data_2);
+  
+  var utterThis= new SpeechSynthesisUtterance(speak_data_1 );
   synth.speak(utterThis);
+}
+function check(){
+  img= document.getElementById("captured_img");
+  classifier.classify(img,gotResult);
+}
+function gotResult(error,results){
+  if(error){
+    console.error(error);
+  }
+  else{
+    console.log(results);
+    document.getElementById("result_object_name").innerHTML= results[0].label;
+    prediction_1= results[0].label;
+    speak();
+    if(results[0].label=="Thumbs Up"){
+      document.getElementById("result_gesture_icon").innerHTML="&#128077;";
+    }
+    if(results[0].label=="Peace"){
+      document.getElementById("result_gesture_icon").innerHTML="&#x270C;";
+    }
+    if(results[0].label=="Amazing"){
+      document.getElementById("result_gesture_icon").innerHTML="&#128076;";
+    }
+  }
 }
